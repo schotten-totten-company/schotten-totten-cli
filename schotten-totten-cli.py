@@ -85,6 +85,7 @@ def getValueFromUser(prompt, validValues, initialValue = -1):
 
 cycles = 0
 while True:
+    print("Wating for your turn ...")
     [playerKey, gameKey, errorCode, board] = worker.recv_multipart()
     if not playerKey:
         break
@@ -94,9 +95,15 @@ while True:
     print("Game Key : ", binascii.hexlify(gameKey).decode())
     errorCode = int(errorCode[0])
     if errorCode == 1:
+        print("##########################")
+        print_board(board)
+        print("##########################")
         print("You won!")
         break
     if errorCode == 2:
+        print("##########################")
+        print_board(board)
+        print("##########################")
         print("You lost!")
         break
     if errorCode == 3:
@@ -115,7 +122,7 @@ while True:
     if moveType == 1:
         milestoneId = getValueFromUser("Which milestone do you want to reclaim (0, 1, ..., 8)?", range(9))
     else:
-        cardId = getValueFromUser("What card do you want to play (0, 1, ..., 6)?", range(7))
+        cardId = getValueFromUser("What card do you want to play (0, 1, ..., 5)?", range(6))
         milestoneId = getValueFromUser("On what milestone do you want to put the card (0, 1, ..., 8)?", range(9))
     
     buffer = DataStream()
@@ -123,9 +130,9 @@ while True:
     buffer.append(cardId)
     buffer.append(milestoneId)
 
-    worker.send_multipart([buffer])
+    worker.send_multipart([playerKey, gameKey, buffer])
 
-    print(" Wating for other player to play ...")
+   
 
 
 
